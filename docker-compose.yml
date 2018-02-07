@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  mysql:
+    container_name: mariadb
+    image: mariadb
+    ports:
+      - "3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: mariaSql
+      MYSQL_DATABASE: magento
+    restart: always
+
+  web:
+    container_name: magento
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_PASSWD: mariaSql
+      DB_NAME: magento
+      DB_SERVER: mysql
+    ports:
+      - "80:80"
+    links:
+      - mysql:database
+    volumes:
+      - .:/var/www/html/
+    restart: always
